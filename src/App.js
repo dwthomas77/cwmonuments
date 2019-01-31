@@ -1,56 +1,70 @@
 import React, { Component } from 'react';
 import styled from 'styled-components';
+import { withContext } from 'context';
+import MonumentsContext, { MonumentsProvider } from 'context/Monuments';
 import { Column, Layout, Page, Row } from 'components/Base';
 import Card from 'components/Card';
 import CollectionSteward from 'components/CollectionSteward';
 import Header from 'components/Header';
 import InteractiveMap from 'components/InteractiveMap';
+import MonumentImage from 'components/MonumentImage';
+import 'styles.css';
 
 class App extends Component {
-render() {
-    const MonumentsSteward = styled(CollectionSteward)`
-        background-color: white;
-        flex: 3;
-    `;
+    constructor(props) {
+        super(props);
+        this.withMonumentsContext = withContext(MonumentsContext);
+    }
 
-    const ActiveMonumentCard = styled(Card)`
-        background-color: #bdbdbd;
-        flex: 1;
-    `;
+    render() {
+        const MonumentsSteward = this.withMonumentsContext(CollectionSteward);
+        const ActiveMonumentImage = this.withMonumentsContext(MonumentImage);
 
-    const HistoryCard = styled(Card)`
-        background-color: #939393;
-        flex: 1;
-    `;
+        const StyledMonumentsSteward = styled(MonumentsSteward)`
+            background-color: white;
+            flex: 3;
+        `;
 
-    const MonumentMap = styled(InteractiveMap)`
-        background-color: #d3d3d3;
-        flex: 3;
-    `;
+        const ActiveMonumentCard = styled(Card)`
+            background-color: #bdbdbd;
+            flex: 1;
+        `;
 
-    const rowHeight = {
-        header: 100,
-    };
+        const HistoryCard = styled(Card)`
+            background-color: #939393;
+            flex: 1;
+        `;
 
-    return (
-        <Page>
-            <Layout>
-                <Row rowHeight={`${rowHeight.header}px`}>
-                    <Header />
-                </Row>
-                <Row rowHeight={`calc(100% - ${rowHeight.header}px)`}>
-                    <Column>
-                        <MonumentsSteward />
-                        <ActiveMonumentCard />
-                    </Column>
-                    <Column columnWidth="2">
-                        <HistoryCard />
-                        <MonumentMap />
-                    </Column>
-                </Row>
-            </Layout>
-        </Page>
-    );
+        const MonumentMap = styled(InteractiveMap)`
+            background-color: #d3d3d3;
+            flex: 3;
+        `;
+
+        const rowHeight = {
+            header: 100,
+        };
+
+        return (
+            <MonumentsProvider>
+                <Page>
+                    <Layout>
+                        <Row rowHeight={`${rowHeight.header}px`}>
+                            <Header />
+                        </Row>
+                        <Row rowHeight={`calc(100% - ${rowHeight.header}px)`}>
+                            <Column>
+                                <StyledMonumentsSteward collectionKey='monuments' />
+                                <ActiveMonumentImage />
+                            </Column>
+                            <Column columnWidth="2">
+                                <HistoryCard />
+                                <MonumentMap />
+                            </Column>
+                        </Row>
+                    </Layout>
+                </Page>
+            </MonumentsProvider>
+        );
     }
 }
 

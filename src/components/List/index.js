@@ -1,8 +1,33 @@
 import React from 'react';
-import { Block } from 'components/Base'
+import styled from 'styled-components';
+import ListItem from 'components/ListItem';
 
 const List = (props) => {
-    return (<Block {...props}>Filter</Block>);
+    const { activeItem, list, setActiveItem } = props;
+
+    return (
+        <ul className={props.className}>
+            {list
+                .map((listItem) => {
+                    const itemProps = {
+                        key: listItem.uid,
+                        onClick: () => { setActiveItem(listItem.uid); },
+                        ...listItem,
+                    };
+                    console.log(props);
+                    if (activeItem === listItem.uid) {
+                        itemProps.className = '--active';
+                    }
+                    return (<ListItem {...itemProps} />);
+                })
+            }
+        </ul>
+    );
 };
 
-export default List;
+const BaseList = styled(List)`
+    border: thin black solid;
+    margin-top: 10px;
+`;
+
+export default BaseList;
